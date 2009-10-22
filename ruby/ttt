@@ -1,23 +1,12 @@
 #!/usr/bin/env ruby 
 
-def :X.opponent
-  :O
-end
-
-def :O.opponent
-  :X
-end
 
 # Represents the state of a single game, including the board, the current player,
 # and the winner, if any.
 #
 class Game
 
-  attr_accessor :current_player
-  attr_accessor :board
-  attr_accessor :state
-
-  def initialize(first_player = :X)
+  def initialize(first_player)
     @current_player = first_player
     @board = Board.new
     @state = :continue
@@ -25,14 +14,14 @@ class Game
 
   # Make a move for the current player. 
   def move(space)
-    @board.move(current_player, space)
+    @board.move(@current_player, space)
     @state = 
       if @board.winning?
         :win
       elsif @board.full?
         :draw
       else
-        self.current_player = current_player.opponent
+        @current_player = @current_player.opponent
         :continue
       end
   rescue InvalidSpaceException
@@ -41,51 +30,26 @@ class Game
 
   def to_s
     "\n#{@board.to_s}\n\n" +
-      case state
+      case @state
       when :win
-        "#{current_player} Wins!\n"
+        "#{@current_player} Wins!\n"
       when :draw
         "It's a Draw!\n"
       when :continue
-        "Select a square, #{current_player}: "
+        "Select a square, #{@current_player}: "
       end
   end
 
-  def self.main
-    game = Game.new
+  def main
 
-    while game.state == :continue
-      print game
-      game.move(gets.to_i)
+    while @state == :continue
+      print self
+      move(gets.to_i)
     end
 
-    print game
+    print self
   end
 
-
-end
-
-# Players
-class Player
-
-  attr_reader :opponent
-
-  def initialize(me, opponent)
-    @me = me
-    if self.class === opponent
-      @opponent = opponent
-    else
-      @opponent = self.class.new(opponent, self)
-    end
-  end
-
-  def to_s
-    @me.to_s
-  end
-
-  def ==(other)
-    @me == other.instance_variable_get(:@me)
-  end
 
 end
 
@@ -106,8 +70,8 @@ class Space
     @player != nil
   end
 
-  def ==(other)
-    @player == other.instance_variable_get(:@player)
+  def ===(other)
+    (@player == other.instance_variable_get(:@player)) && self
   end
 
   def to_s
@@ -125,7 +89,7 @@ class Board
 
   def initialize
     @board = default_board
-    @slices = make_slices
+    @slices = rows + columns + diagonals
   end
 
   def move(player, desired_space)
@@ -141,9 +105,7 @@ class Board
   end
 
   def to_s
-    rows.map do |row|
-      row.join("|")
-    end.join("\n---+---+---\n")
+    rows.join("\n---+---+---\n")
   end
 
   private
@@ -157,36 +119,49 @@ class Board
     @board[n-1]
   end
 
-  def make_slices
-    [ slice(1,2,3), slice(4,5,6), slice(7,8,9),
-      slice(1,4,7), slice(2,5,8), slice(3,6,9),
-      slice(1,5,9), slice(7,5,3) ]
-  end
-
-  def slice(i,j,k)
-    Slice.new(space(i),space(j),space(k))
+  def row_arrays 
+    [@board[0,3], @board[3,3], @board[6,3]]
   end
 
   def rows 
-    [@board[0,3], @board[3,3], @board[6,3]]
+    @rows ||= row_arrays.map { |row| Slice.new(row) }
+  end
+
+  def columns
+    @columns ||= row_arrays.transpose.map { |col| Slice.new(col) }
+  end
+
+  def diagonals
+    @diagonals ||= 
+      [ Slice.new(space(1),space(5),space(9)),
+        Slice.new(space(7),space(5),space(3)) ]
   end
 
 end
 
 # Represents a 3-in-a-row subset of the spaces on the board
 class Slice
-  def initialize(space1, space2, space3)
-    @space1 = space1
-    @space2 = space2
-    @space3 = space3
+  def initialize(*spaces)
+    @spaces = spaces.flatten
   end
 
   def winning?
-    @space1 == @space2 && @space2 == @space3 && @space1.player
+    (result = @spaces.reduce(:===)) && result.player
+  end
+
+  def to_s
+    @spaces.join("|")
   end
 
 end
 
-Game.main
+# Players
+X = 'X'
+O = 'O'
+
+def X.opponent; O; end
+def O.opponent; X; end
+
+Game.new(X).main
 
 # vim: ts=2 sw=2 et
