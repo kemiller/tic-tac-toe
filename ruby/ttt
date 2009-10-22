@@ -49,10 +49,9 @@ class Game
 
     print self
   end
-
-
 end
 
+# Represents the current state of a single space on the board
 class Space
 
   attr_reader :player, :number
@@ -85,6 +84,7 @@ end
 
 class InvalidSpaceException < Exception; end
 
+# Represents the 3x3 tic-tac-toe grid
 class Board
 
   def initialize
