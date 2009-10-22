@@ -1,0 +1,7 @@
+
+*.swp
+*.swo
+ocaml/*.o
+ocaml/*.cmx
+ocaml/*.cmi
+ocaml/ttt

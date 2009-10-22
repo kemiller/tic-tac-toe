@@ -111,7 +111,7 @@ let string_of_square square =
 (* Output the concrete grid representation of a square *)
 let concrete square =
     match square with 
-    | Empty n -> sprintf "<%d>" n
+    | Empty n -> sprintf "(%d)" n
     | square -> sprintf " %s " (string_of_square square)
 ;;
 
