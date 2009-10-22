@@ -72,8 +72,12 @@ class TttTest < Test::Unit::TestCase
     assert_equal X_ON_1, run_script(1,1,EOF)
   end
 
-  def test_bad_number
+  def test_bad_number_too_high
     assert_equal X_ON_5_O_ON_9, run_script(5,9,123,EOF)
+  end
+
+  def test_bad_number_too_low
+    assert_equal X_ON_5_O_ON_9, run_script(5,9,0,EOF)
   end
 
   protected
