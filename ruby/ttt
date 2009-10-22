@@ -1,5 +1,13 @@
 #!/usr/bin/env ruby 
 
+def :X.opponent
+  :O
+end
+
+def :O.opponent
+  :X
+end
+
 # Represents the state of a single game, including the board, the current player,
 # and the winner, if any.
 #
@@ -9,7 +17,7 @@ class Game
   attr_accessor :board
   attr_accessor :state
 
-  def initialize(first_player = Player.new('X','O'))
+  def initialize(first_player = :X)
     @current_player = first_player
     @board = Board.new
     @state = :continue
