@@ -1,11 +1,11 @@
 
 .PHONY: ttt clean test
 
-ttt:	
+ttt:	ticTacToe.ml main.ml
 	ocamlopt -o ttt ticTacToe.ml main.ml
 
 clean: 
 	rm -f *.o *.cmx *.cmi ttt
 
-test: 
+test:	ttt
 	ruby ../verify/ttt_test.rb
