@@ -59,8 +59,12 @@
             (all-eq? (map second board))
             (all-eq? (map third board))
             ; diagonals
-            (all-eq? (list (first (first board)) (second (second board)) (third (third board))))
-            (all-eq? (list (third (first board)) (second (second board)) (first (third board))))))))
+            (all-eq? (list (first (first board))
+                           (second (second board)) 
+                           (third (third board))))
+            (all-eq? (list (third (first board)) 
+                           (second (second board)) 
+                           (first (third board))))))))
 
 (define (full? board)
   (not (findf number? (flatten board))))
