@@ -21,7 +21,7 @@ data Square = Move User | Empty Int
 
 instance Show Square where
     show (Move x)   = " " ++ (show x) ++ " "
-    show (Empty x)  = " " ++ (show x) ++ " "
+    show (Empty x)  = "(" ++ (show x) ++ ")"
 
 filled :: Square -> Bool
 filled (Move _) = True
@@ -47,10 +47,10 @@ full (Board squares) = all filled (concat squares)
 data Result = Continue User Board | Error User Board | Win User Board | Draw Board
 
 instance Show Result where
-    show (Continue user board) = show board ++ show user ++ "'s turn: "
-    show (Error user board)    = show board ++ "Invalid spot! Try again, " ++ show user ++ ": "
-    show (Win user board)      = show board ++ show user ++ " wins!"
-    show (Draw board)          = show board ++ "It's a draw!"
+    show (Continue user board) = show board ++ "Select a square, " ++ show user ++ ": "
+    show (Error user board)    = show board ++ "Select a square, " ++ show user ++ ": "
+    show (Win user board)      = show board ++ show user ++ " Wins!"
+    show (Draw board)          = show board ++ "It's a Draw!"
 
 -- 
 -- Initial Board
