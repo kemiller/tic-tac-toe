@@ -37,7 +37,6 @@ instance Show Board where
         where
             showLine xs = concat (intersperse "|" $ map show xs) ++ "\n"
 
-full :: Board -> Bool
 full (Board squares) = all filled (concat squares)
 
 -- 
