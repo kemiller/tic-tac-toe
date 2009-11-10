@@ -22,7 +22,6 @@ instance Show Square where
     show (Move x)   = " " ++ show x ++ " "
     show (Empty x)  = "(" ++ show x ++ ")"
 
-filled :: Square -> Bool
 filled (Move _) = True
 filled _        = False
 
@@ -42,11 +41,10 @@ full (Board squares) = all filled (concat squares)
 -- 
 -- Results
 --
-data Result = Continue User Board | Error User Board | Win User Board | Draw Board
+data Result = Continue User Board | Win User Board | Draw Board
 
 instance Show Result where
     show (Continue user board) = show board ++ "Select a square, " ++ show user ++ ": "
-    show (Error user board)    = show board ++ "Select a square, " ++ show user ++ ": "
     show (Win user board)      = show board ++ show user ++ " Wins!\n"
     show (Draw board)          = show board ++ "It's a Draw!\n"
 
@@ -112,7 +110,7 @@ move user pos board = result user pos board (place user pos board)
         placeInLine user pos         = map $ matchSquare user pos
 
         result user pos orig board 
-            | orig == board          = Error user orig
+            | orig == board          = Continue user orig
             | otherwise              = outcome user board
 
 main :: IO ()
@@ -125,7 +123,6 @@ main = loop (Continue X startingBoard)
                  Win user board      -> exitSuccess
                  Draw board          -> exitSuccess
                  Continue user board -> getInput user board
-                 Error user board    -> getInput user board
         getInput user board = do
              pos <- readLn::IO Int 
              loop (move user pos board)
