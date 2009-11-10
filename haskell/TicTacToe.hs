@@ -1,6 +1,6 @@
 
 import Data.List (intersperse, group)
-import System.IO (print, getLine)
+import System.IO (print, getLine, stdout, hFlush)
 import System.Exit (exitSuccess)
 
 -- 
@@ -34,7 +34,7 @@ data Board = Board [[Square]]
     deriving(Eq)
 
 instance Show Board where
-    show (Board ls) = concat (intersperse "---+---+---\n" (map showLine ls))
+    show (Board ls) = "\n" ++ concat (intersperse "---+---+---\n" (map showLine ls)) ++ "\n"
         where
             showLine xs = concat (intersperse "|" (map show xs)) ++ "\n"
 
@@ -49,8 +49,8 @@ data Result = Continue User Board | Error User Board | Win User Board | Draw Boa
 instance Show Result where
     show (Continue user board) = show board ++ "Select a square, " ++ show user ++ ": "
     show (Error user board)    = show board ++ "Select a square, " ++ show user ++ ": "
-    show (Win user board)      = show board ++ show user ++ " Wins!"
-    show (Draw board)          = show board ++ "It's a Draw!"
+    show (Win user board)      = show board ++ show user ++ " Wins!\n"
+    show (Draw board)          = show board ++ "It's a Draw!\n"
 
 -- 
 -- Initial Board
@@ -121,7 +121,8 @@ main :: IO ()
 main = loop (Continue X startingBoard)
     where 
         loop result = do 
-            print result
+            putStr $ show result
+            hFlush stdout
             case result of
                  Win user board      -> exitSuccess
                  Draw board          -> exitSuccess
