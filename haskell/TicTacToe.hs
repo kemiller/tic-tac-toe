@@ -1,6 +1,6 @@
 
-import Data.List (intersperse, group)
-import System.IO (print, getLine, stdout, hFlush)
+import Data.List (intersperse)
+import System.IO (stdout, hFlush)
 import System.Exit (exitSuccess)
 
 -- 
@@ -9,7 +9,6 @@ import System.Exit (exitSuccess)
 data User = X | O
     deriving(Show, Eq)
 
-otherUser :: User -> User
 otherUser X = O
 otherUser O = X
 
@@ -20,8 +19,8 @@ data Square = Move User | Empty Int
     deriving(Eq)
 
 instance Show Square where
-    show (Move x)   = " " ++ (show x) ++ " "
-    show (Empty x)  = "(" ++ (show x) ++ ")"
+    show (Move x)   = " " ++ show x ++ " "
+    show (Empty x)  = "(" ++ show x ++ ")"
 
 filled :: Square -> Bool
 filled (Move _) = True
@@ -34,9 +33,9 @@ data Board = Board [[Square]]
     deriving(Eq)
 
 instance Show Board where
-    show (Board ls) = "\n" ++ concat (intersperse "---+---+---\n" (map showLine ls)) ++ "\n"
+    show (Board ls) = "\n" ++ concat (intersperse "---+---+---\n" $ map showLine ls) ++ "\n"
         where
-            showLine xs = concat (intersperse "|" (map show xs)) ++ "\n"
+            showLine xs = concat (intersperse "|" $ map show xs) ++ "\n"
 
 full :: Board -> Bool
 full (Board squares) = all filled (concat squares)
@@ -109,9 +108,9 @@ outcome user board =
 move :: User -> Int -> Board -> Result
 move user pos board = result user pos board (place user pos board)
     where
-        place user pos (Board lines) = Board (map (placeInLine user pos) lines)
+        place user pos (Board lines) = Board $ map (placeInLine user pos) lines
 
-        placeInLine user pos         = map (matchSquare user pos)
+        placeInLine user pos         = map $ matchSquare user pos
 
         result user pos orig board 
             | orig == board          = Error user orig
