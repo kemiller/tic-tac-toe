@@ -1,0 +1,163 @@
+#!/usr/bin/env lua
+
+-- Constants
+
+X = "X";
+O = "O";
+
+-- Starting Data 
+
+board = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+current_player = X;
+winning_player = nil;
+
+-- Board I/O
+
+function print_board()
+	print();
+	print_row(board[1]);
+	print_sep();
+	print_row(board[2]);
+	print_sep();
+	print_row(board[3]);
+	print();
+end
+
+function print_sep()
+	print("---+---+---");
+end
+
+function print_row(r)
+	print(display_cell(r[1]) .. "|" ..  display_cell(r[2]) ..  "|" .. display_cell(r[3]))
+end
+
+function display_cell(c)
+	if type(c) == "number" then
+		return "(" .. c .. ")"
+	else
+		return " " .. c .. " "
+	end
+end
+
+function print_prompt(player)
+	io.write("Select a square, " .. player .. ": ");
+end
+
+-- Placement
+
+function row(space)
+	return math.floor((space - 1) / 3) + 1
+end
+
+function col(space)
+	return (space - 1) % 3 + 1
+end
+
+function place_marker(player, space)
+	if space > 9 or space < 1 then
+		return false
+	end
+
+	local the_row = board[row(space)];
+	local cell = the_row[col(space)]
+	if type(cell) == 'number' then
+		the_row[col(space)] = player
+		return true
+	else
+		return false
+	end
+end
+
+function read_choice()
+	return io.read("*n", "*l");
+end
+
+function row_equal(n)
+	if board[n][1] == board[n][2] and board[n][2] == board[n][3] then
+		winning_player = board[n][1];
+		return true;
+	else 
+		return false;
+	end
+end
+
+function col_equal(n)
+	if board[1][n] == board[2][n] and board[2][n] == board[3][n] then
+		winning_player = board[1][n];
+		return true;
+	else 
+		return false;
+	end
+end
+
+-- for our purposes, a draw is a "win",
+-- but the current_winner variable is nil
+function detect_winner()
+	for i = 1, 3 do
+		if row_equal(i) then
+			return true;
+		end
+		if col_equal(i) then
+			return true;
+		end
+	end
+
+	-- diagonals
+	if board[1][1] == board[2][2] and board[2][2] == board[3][3] then
+		winning_player = board[1][1];
+		return true;
+	end
+
+	if board[1][3] == board[2][2] and board[2][2] == board[3][1] then
+		winning_player = board[1][3];
+		return true;
+	end
+
+	-- draw
+	-- if there are any numbers left, it's not a draw,
+	for i = 1, 3 do
+		local rowstr = table.concat(board[i])
+		if string.find(rowstr, "%d") then
+			return false;
+		end
+	end
+
+	return true;
+
+end
+
+function print_winner()
+	if winning_player == nil then
+		print("It's a Draw!")
+	else
+		print(winning_player .. " Wins!")
+	end
+end
+
+function next_player()
+	if current_player == X then
+		current_player = O
+	else
+		current_player = X
+	end
+end
+
+-- "main"
+
+while true do
+	print_board(board);
+	if detect_winner() then
+		print_winner();
+		break
+	end
+
+	print_prompt(current_player);
+	local space_selected = read_choice();
+	if place_marker(current_player, space_selected) then
+		next_player();
+	end
+end
+
+
+
+	
