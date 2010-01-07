@@ -4,26 +4,27 @@
        WORKING-STORAGE SECTION.
 
        01 CurrentPlayer     PIC A VALUE "X".
+       01 CurrentMove       PIC 9(10).
+       01 RowSeparator      PIC X(11) VALUE "---+---+---". 
 
+      * The board, for calculation purposes
        01 CurrentBoard.
            02 CurrentBoardValues        PIC X(9) VALUE "123456789".
            02 CurrentBoardTable REDEFINES CurrentBoardValues.
                03 Cell OCCURS 9 TIMES PIC X.
 
-       01 CurrentMove       PIC 9.
-
-       01 RowSeparator      PIC X(11) VALUE "---+---+---". 
-
+      * The board, for display purposes
        01 BoardForDisplay.
-           02 RowOne        PIC X(11) VALUE "(1)|(2)|(3)".
-           02 FILLER        PIC X     VALUE x'0a'.
-           02 RowTwo        PIC X(11) VALUE "(4)|(5)|(6)".
-           02 FILLER        PIC X     VALUE x'0a'.
-           02 RowThree      PIC X(11) VALUE "(7)|(8)|(9)".
-           02 FILLER        PIC X     VALUE x'0a'.
+           02 BoardValuesForDisplay.
+               03 RowOne        PIC X(11) VALUE "(1)|(2)|(3)".
+               03 FILLER        PIC X     VALUE x'0a'.
+               03 RowTwo        PIC X(11) VALUE "(4)|(5)|(6)".
+               03 FILLER        PIC X     VALUE x'0a'.
+               03 RowThree      PIC X(11) VALUE "(7)|(8)|(9)".
+               03 FILLER        PIC X     VALUE x'0a'.
 
-       01 FILLER Redefines BoardForDisplay.
-           02 DisplayCell   OCCURS 9 TIMES PIC X(4).
+           02 FILLER Redefines BoardValuesForDisplay.
+               03 DisplayCell   OCCURS 9 TIMES PIC X(4).
 
        01 GameOver          PIC X VALUE 'F'.
 
@@ -31,16 +32,16 @@
        Begin.
            PERFORM WITH TEST AFTER UNTIL GameOver EQUAL 'T'
                PERFORM DisplayBoard
-               DISPLAY "Enter your move, " CurrentPlayer ": "
+               DISPLAY "Select a square, " CurrentPlayer ": "
                    WITH NO ADVANCING
                ACCEPT  CurrentMove
                IF CurrentMove > 0 AND CurrentMove < 10 AND
                        Cell(CurrentMove) NUMERIC
                    MOVE CurrentPlayer TO Cell(CurrentMove)
-                   PERFORM CheckForWin
-                   PERFORM CheckForDraw
                    CALL "FormatCell" USING BY CONTENT CurrentPlayer
                        BY REFERENCE DisplayCell(CurrentMove)
+                   PERFORM CheckForWin
+                   PERFORM CheckForDraw
                    PERFORM SwitchPlayer
                END-IF
            END-PERFORM.
@@ -64,12 +65,14 @@
                    OR Cell(3) EQUAL Cell(6) AND Cell(6) EQUAL Cell(9)
                    OR Cell(1) EQUAL Cell(5) AND Cell(5) EQUAL Cell(9)
                    OR Cell(3) EQUAL Cell(5) AND Cell(5) EQUAL Cell(7)
+               PERFORM DisplayBoard
                DISPLAY CurrentPlayer " Wins!"
                SET GameOver TO 'T'
            END-IF.
 
        CheckForDraw.
            IF CurrentBoard ALPHABETIC AND GameOver NOT EQUAL 'T'
+               PERFORM DisplayBoard
                DISPLAY "It's a Draw!"
                SET GameOver TO 'T'
            END-IF.
