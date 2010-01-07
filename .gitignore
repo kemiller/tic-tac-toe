@@ -7,4 +7,7 @@ ocaml/*.cmx
 ocaml/*.cmi
 ocaml/ttt
 scheme/ttt
+haskell/ttt
+haskell/*.o
+haskell/*.hi
 
