@@ -17,13 +17,13 @@
        01 BoardForDisplay.
            02 BoardValuesForDisplay.
                03 RowOne        PIC X(11) VALUE "(1)|(2)|(3)".
-               03 FILLER        PIC X     VALUE x'0a'.
+               03 FILLER        PIC X.
                03 RowTwo        PIC X(11) VALUE "(4)|(5)|(6)".
-               03 FILLER        PIC X     VALUE x'0a'.
+               03 FILLER        PIC X.
                03 RowThree      PIC X(11) VALUE "(7)|(8)|(9)".
-               03 FILLER        PIC X     VALUE x'0a'.
+               03 FILLER        PIC X.
 
-           02 FILLER Redefines BoardValuesForDisplay.
+           02 FILLER REDEFINES BoardValuesForDisplay.
                03 DisplayCell   OCCURS 9 TIMES PIC X(4).
 
        01 GameOver          PIC X VALUE 'F'.
