@@ -1,0 +1,47 @@
+#!/usr/bin/env python2.6
+ 
+from __future__ import print_function
+
+starting_player = 'X'
+starting_board = [ [1, 2, 3],
+                   [4, 5, 6],
+                   [7, 8, 9] ]
+
+def rows(board):
+    # There is probably a better way to dup a list
+    return [row for row in board]
+
+def cols(board):
+    return [[row[i] for row in board] for i in [0,1,2]]
+
+def diagonals(board):
+    return [[row[i] for row in board for i in [0,1,2]],
+            [row[i] for row in board for i in [2,1,0]]]
+
+def lines(board):
+    l = rows(board)
+    l.extend(cols(board))
+    l.extend(diagonals(board))
+    return l
+
+def format(cell):
+    if type(cell) == type(1):
+        return "(" + repr(cell) + ")"
+    else:
+        return " " + repr(cell) + " "
+
+    
+def print_board(board):
+    print("---+---+---\n".join(["|".join([format(c) for c in row]) + "\n" for row in board]))
+
+def print_prompt(player):
+    print("Select a square, " + player + ": ", end='')
+
+def main():
+    print(lines(starting_board))
+    print_board(starting_board)
+    print_prompt(starting_player)
+
+main()
+
+# vim: sw=4 et
