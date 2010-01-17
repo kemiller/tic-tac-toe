@@ -1,47 +1,98 @@
 #!/usr/bin/env python2.6
  
 from __future__ import print_function
+import sys
 
-starting_player = 'X'
+X = 'X'
+O = 'O'
+
+starting_player = X
 starting_board = [ [1, 2, 3],
                    [4, 5, 6],
                    [7, 8, 9] ]
 
-def rows(board):
-    # There is probably a better way to dup a list
-    return [row for row in board]
-
-def cols(board):
-    return [[row[i] for row in board] for i in [0,1,2]]
-
-def diagonals(board):
-    return [[row[i] for row in board for i in [0,1,2]],
-            [row[i] for row in board for i in [2,1,0]]]
-
-def lines(board):
-    l = rows(board)
-    l.extend(cols(board))
-    l.extend(diagonals(board))
-    return l
+# Input/Output
 
 def format(cell):
     if type(cell) == type(1):
         return "(" + repr(cell) + ")"
     else:
-        return " " + repr(cell) + " "
+        return " " + cell + " "
 
-    
 def print_board(board):
-    print("---+---+---\n".join(["|".join([format(c) for c in row]) + "\n" for row in board]))
+    print("\n" + "\n---+---+---\n".join(["|".join([format(c) for c in row]) for row in board]) + "\n")
 
 def print_prompt(player):
     print("Select a square, " + player + ": ", end='')
 
-def main():
-    print(lines(starting_board))
-    print_board(starting_board)
-    print_prompt(starting_player)
+def print_winner(player):
+    print(player + " Wins!")
 
-main()
+def print_draw():
+    print("It's a Draw!")
+
+def read_answer():
+    str = sys.stdin.readline()
+    return int(str)
+
+# Winner Detection
+
+def rows(board):
+    return board[:] # clone
+
+def cols(board):
+    return [[row[i] for row in board] for i in [0,1,2]]
+
+def diagonals(board):
+    return [[row[i] for row, i in zip(board,[0,1,2])],
+            [row[i] for row, i in zip(board,[2,1,0])]]
+
+def lines(board):
+    return rows(board) + cols(board) + diagonals(board)
+
+def complete_line(line):
+    return line[0] == line[1] and line[1] == line[2]
+
+def winner(board):
+    return any([complete_line(line) for line in lines(board)])
+    
+def full(board):
+    return not any([type(row[i]) == type(1) for row in board for i in [0,1,2]])
+    
+# Game Play
+
+def other_player(player):
+    if player == X:
+        return O
+    else:
+        return X
+
+def legal_move(space, board):
+    return any([row[i] == space for row in board for i in [0, 1, 2]])
+
+def make_move(player, space, board):
+    new_board = [row[:] for row in board]
+    new_board[(space-1)/3][(space-1)%3] = player
+    return new_board
+
+# Main loop
+
+def loop(player, board):
+    print_board(board)
+    if winner(board):
+        print_winner(other_player(player))
+        return
+    elif full(board):
+        print_draw()
+        return
+    else:
+        print_prompt(player)
+        space = read_answer()
+        if legal_move(space, board):
+            loop(other_player(player), make_move(player, space, board))
+        else:
+            loop(player, board)
+
+loop(starting_player, starting_board)
 
 # vim: sw=4 et
