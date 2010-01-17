@@ -1,5 +1,5 @@
 
-.PHONY: ttt clean test
+.PHONY: ttt clean test stats
 
 ttt:	tic_tac_toe.c	
 	gcc -ansi -pedantic -o ttt tic_tac_toe.c
@@ -9,3 +9,6 @@ clean:
 
 test:	ttt
 	ruby ../verify/ttt_test.rb
+
+stats:	
+	wc ttt

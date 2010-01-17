@@ -1,5 +1,5 @@
 
-.PHONY: ttt clean test
+.PHONY: ttt clean test stats
 
 ttt:	ttt.cbl
 	cobc -x ttt.cbl
@@ -9,3 +9,6 @@ clean:
 
 test:	ttt
 	ruby ../verify/ttt_test.rb
+
+stats:
+	wc ttt.cbl

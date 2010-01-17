@@ -1,5 +1,5 @@
 
-.PHONY: ttt clean test
+.PHONY: ttt clean test stats
 
 ttt:	ticTacToe.hs
 	ghc -o ttt TicTacToe.hs
@@ -9,3 +9,6 @@ clean:
 
 test:	ttt
 	ruby ../verify/ttt_test.rb
+
+stats:
+	wc ticTacToe.hs
