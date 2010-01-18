@@ -1,5 +1,5 @@
 
-.PHONY: ttt clean test stats
+.PHONY: clean test stats
 
 ttt:	tic_tac_toe.c	
 	gcc -ansi -pedantic -o ttt tic_tac_toe.c

@@ -1,5 +1,5 @@
 
-.PHONY: ttt clean test stats
+.PHONY: clean test stats
 
 ttt:	ticTacToe.hs
 	ghc -o ttt TicTacToe.hs

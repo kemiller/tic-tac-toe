@@ -1,5 +1,5 @@
 
-.PHONY: ttt clean test stats
+.PHONY: clean test stats
 
 ttt:	ticTacToe.ml
 	ocamlopt -o ttt ticTacToe.ml

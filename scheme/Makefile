@@ -1,5 +1,5 @@
 
-.PHONY: ttt clean test stats
+.PHONY: clean test stats
 
 ttt:	tic-tac-toe.ss	
 	mzc --exe ttt tic-tac-toe.ss

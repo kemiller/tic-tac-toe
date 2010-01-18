@@ -10,4 +10,6 @@ scheme/ttt
 haskell/ttt
 haskell/*.o
 haskell/*.hi
+c/ttt
+cobol/ttt
 
