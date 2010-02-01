@@ -12,7 +12,7 @@ class TttTest < Test::Unit::TestCase
   EOF = 4.chr
 
   def test_starts_with_x
-    assert_equal STARTING_BOARD, run_script(EOF)
+    assert_match /Select a square, X/, run_script(EOF)
   end
 
   def test_x_1
