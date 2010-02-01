@@ -1,0 +1,83 @@
+#!/usr/bin/env rebol -q
+
+REBOL []
+
+player: 'X
+
+board: [1 2 3 4 5 6 7 8 9]
+
+cell2string: func [cell] [
+	either integer? cell
+		[ join "(" [cell ")"] ]
+		[ join " " [cell " "] ]
+]
+		
+print_board: does [
+	repr: []
+	clear repr
+	for row 0 6 3 [
+		for col 1 3 1 [
+			append repr cell2string pick board (row + col)
+			append repr either col < 3 [ "|" ][ "^/" ]
+		]
+		if row < 6 [ append repr "---+---+---^/" ]
+	]
+	print join "^/" repr
+]
+
+make_move: func [space] [
+	if (pick board space) == space [poke board space player]
+]
+
+cells_equal: func [value spaces] [
+	foreach space spaces [
+		if value <> pick board space [return false]
+	]
+	return true
+]
+		
+winner?: does [
+	p: other_player
+	if any [
+		cells_equal p [ 1 2 3 ]
+		cells_equal p [ 4 5 6 ]
+		cells_equal p [ 7 8 9 ]
+		cells_equal p [ 1 4 7 ]
+		cells_equal p [ 2 5 8 ]
+		cells_equal p [ 3 6 9 ]
+		cells_equal p [ 1 5 9 ]
+		cells_equal p [ 3 5 7 ]
+	] [
+		player: p
+		true
+	]
+		
+]
+
+tie?: does [
+	foreach cell board [  if integer? cell [return false] ]
+	return true
+]
+
+prompt: does [
+	case [
+		winner? [(print [player "Wins!"]) break]
+		tie?    [(print "It's a Draw!") break]
+		true    [ prin join "Select a square, " [player ": "] ]
+	]
+]
+	
+
+other_player: does [
+	either player = 'X ['O]['X]
+]
+
+forever [
+	print_board 
+	prompt
+	move: to-integer input
+	if (make_move move) [player: other_player]
+]
+
+
+; vim: syntax=rebol
