@@ -17,7 +17,6 @@ type result = Continue of square | Win of square | Draw
 let starting_grid = [[ Empty 1; Empty 2; Empty 3];
                      [ Empty 4; Empty 5; Empty 6];
                      [ Empty 7; Empty 8; Empty 9]] 
-;;
 
 (* X always goes first *)
 let starting_player = X
@@ -27,12 +26,10 @@ let update_square replacement target_slot_no current =
     match current with
     | Empty slot_no when slot_no = target_slot_no -> replacement
     | current -> current
-;;
 
 (* Replace the given slot in the grid with the new square *)
 let update_grid grid replacement target_slot_no = 
     map (map (update_square replacement target_slot_no)) grid
-;;
 
 (* Toggle X and O *)
 let swap square = match square with X -> O | O -> X | square -> square
@@ -88,7 +85,6 @@ let result_of_grid current_player grid =
     | grid -> Draw
 
     (* XXX There's probably a better way to do this. XXX *)
-;;
 
 (**********)
 (* Output *)
@@ -106,14 +102,12 @@ let string_of_square square =
     | Empty n -> string_of_int n
     | X -> x_mark_str
     | O -> o_mark_str
-;;
 
 (* Output the concrete grid representation of a square *)
 let concrete square =
     match square with 
     | Empty n -> sprintf "(%d)" n
     | square -> sprintf " %s " (string_of_square square)
-;;
 
 (* Convert a whole grid to its string representation *)
 let concrete_grid grid = map (map concrete) grid
@@ -122,15 +116,13 @@ let concrete_grid grid = map (map concrete) grid
 let print_grid grid = 
     let rows = map (concat wall_str) (concrete_grid grid) in
     printf "\n%s\n" (concat floor_str rows)
-;;
 
 (* String representation of result type *)
 let string_of_result result =
     match result with
-    | Continue player -> sprintf "Select a square, %s: "  (string_of_square player);
+    | Continue player -> sprintf "Select a square, %s: "  (string_of_square player)
     | Win player -> sprintf "%s Wins!" (string_of_square player)
     | Draw -> "It's a Draw!"
-;;
 
 (*********)
 (* Input *)
@@ -141,7 +133,6 @@ let read_slot_no result =
     printf "\n%s"  (string_of_result result);
     try int_of_string (read_line())
     with Failure("int_of_string") -> -1
-;;
 
 (* Main Game Loop *)
 let rec game_loop current_player grid =
@@ -155,6 +146,5 @@ let rec game_loop current_player grid =
     | Continue player -> game_loop player (next_grid player)
     | result -> result
 
-;;
 
-printf "\n%s\n"  (string_of_result (game_loop starting_player starting_grid)) 
+let () = printf "\n%s\n"  (string_of_result (game_loop starting_player starting_grid)) 
