@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+
+# Set up the board scratch pad
+cd $TMPDIR
+
+ALLSPOTS="1 2 3 4 5 6 7 8 9"
+
+function define-row () {
+	[ -d rows ] || mkdir rows
+	mkdir rows/$1 
+	for i in $2 $3 $4; do
+		ln -sf ../../$i rows/$1/$i 
+	done
+}
+
+function initialize-board () {
+	if [ -d tic-tac-toe ]; then
+		rm -fr tic-tac-toe
+	fi
+
+	mkdir tic-tac-toe && cd tic-tac-toe
+
+	cat > display-board <<EOF
+
+(1)|(2)|(3)
+---+---+---
+(4)|(5)|(6)
+---+---+---
+(7)|(8)|(9)
+
+EOF
+
+	# Store the players in self-named files
+	echo "X" > X
+	echo "O" > O
+
+	# Start with X
+	ln -s X player
+
+	# Make blank starting squares
+	touch $ALLSPOTS
+
+	# Define sets of links to the squares to represent rows
+	define-row h1 1 2 3
+	define-row h2 4 5 6
+	define-row h3 7 8 9
+
+	define-row v1 1 4 7
+	define-row v2 2 5 8
+	define-row v3 3 6 9
+
+	define-row d1 1 5 9
+	define-row d2 3 5 7
+}
+
+function place-move () {
+	cat player > "$1"
+	sed -i -e "s/(${1})/ $(cat player) /;" display-board 
+}
+
+function swap-players () {
+	ln -sf $(cat player | tr XO OX) player
+}
+
+function detect-result () {
+
+	# Win
+	for row in rows/*; do
+		n=$(grep -l `cat player` $row/* | wc -l)
+		if [ "$n" -ge 3 ]; then
+			cat display-board
+			echo "$(cat player) Wins!"
+			exit 0
+		fi
+	done
+
+	# Draw
+	n=$(cat $ALLSPOTS | wc -l)
+	if [ "$n" -ge 9 ]; then
+		cat display-board
+		echo "It's a Draw!"
+		exit 0
+	fi
+
+	# Continue
+	swap-players
+}
+	
+initialize-board
+
+while true; do
+
+	cat display-board
+
+	echo -n "Select a square, $(cat player): "
+	read square
+	if [ -n "$square" -a -e "$square" -a ! -s "$square" ]; then
+		place-move $square
+		detect-result
+	fi
+
+done
+
+
