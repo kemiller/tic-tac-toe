@@ -94,7 +94,8 @@ while true; do
 
 	echo -n "Select a square, $(cat player): "
 	read square
-	if [ -n "$square" -a -e "$square" -a ! -s "$square" ]; then
+
+	if [ "$square" -ge 1 -a "$square" -le 9 -a ! -s "$square" ]; then
 		place-move $square
 		detect-result
 	fi
