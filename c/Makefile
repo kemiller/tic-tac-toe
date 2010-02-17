@@ -11,4 +11,4 @@ test:	ttt
 	ruby ../verify/ttt_test.rb
 
 stats:	
-	wc ttt
+	wc tic_tac_toe.c
