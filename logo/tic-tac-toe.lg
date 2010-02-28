@@ -1,0 +1,73 @@
+
+make "cells [1 2 3 4 5 6 7 8 9]
+make "cellPositions listtoarray [
+	[-121  121]
+	[   0  121]
+	[ 121  121]
+	[-121    0]
+	[   0    0]
+    [ 121    0]
+	[-121 -121]
+	[   0 -121]
+    [ 121 -121]
+]
+
+TO drawLine :x :y :nx :ny
+	penup
+	setxy x y
+	pendown
+	setxy nx ny
+	penup
+END
+	
+TO drawX :x :y
+	drawLine (x - 50) (y + 50) (x + 50) (y - 50)
+	drawLine (x + 50) (y + 50) (x - 50) (y - 50)
+END
+
+TO drawO :x :y
+	penup
+	setxy x y
+	pendown
+	arc 360 50
+	penup
+END
+
+TO drawGrid
+	drawLine 61 171 61 -171
+	drawLine -61 171 -61 -171
+	drawLine 171 61 -171 61
+	drawLine 171 -61 -171 -61
+END
+
+TO markPos :player :pos
+	make "coords (item :pos cellPositions)
+	ifelse (player = "X) ~
+		[drawX (item 1 coords) (item 2 coords)] ~
+		[drawO (item 1 coords) (item 2 coords)]
+end
+	
+TO swapPlayer
+	ifelse (currentPlayer = "X) ~
+		[make "currentPlayer "O] ~
+		[make "currentPlayer "X]
+END
+	
+		
+TO promptMove 
+	type `[Which square, ,currentPlayer] 
+	type `[,": ," ]
+	make "numpos readword
+	show numpos
+	markPos currentPlayer numpos
+	swapPlayer
+END
+
+penup
+hideturtle
+
+drawGrid 
+
+make "currentPlayer "X
+
+forever [ promptMove ]
