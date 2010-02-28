@@ -1,6 +1,7 @@
+#!/usr/bin/env logo
 
-make "cells [1 2 3 4 5 6 7 8 9]
-make "cellPositions listtoarray [
+make "cells {1 2 3 4 5 6 7 8 9}
+make "cellPositions {
 	[-121  121]
 	[   0  121]
 	[ 121  121]
@@ -10,7 +11,7 @@ make "cellPositions listtoarray [
 	[-121 -121]
 	[   0 -121]
     [ 121 -121]
-]
+}
 
 TO drawLine :x :y :nx :ny
 	penup
@@ -40,27 +41,66 @@ TO drawGrid
 	drawLine 171 -61 -171 -61
 END
 
-TO markPos :player :pos
-	make "coords (item :pos cellPositions)
-	ifelse (player = "X) ~
-		[drawX (item 1 coords) (item 2 coords)] ~
-		[drawO (item 1 coords) (item 2 coords)]
+TO markPos :player :numpos
+	localmake "coords (item :numpos cellPositions)
+	setitem numpos cells player
+	ifelse (player = "X) [
+		drawX (item 1 coords) (item 2 coords)
+	] [
+		drawO (item 1 coords) (item 2 coords)
+	]
 end
 	
 TO swapPlayer
-	ifelse (currentPlayer = "X) ~
-		[make "currentPlayer "O] ~
-		[make "currentPlayer "X]
+	ifelse (currentPlayer = "X) [
+		make "currentPlayer "O
+	] [
+		make "currentPlayer "X
+	]
 END
-	
+
+TO checkRow :x :y :z
+	output (and ((item x cells) = currentPlayer)
+				((item y cells) = currentPlayer)
+				((item z cells) = currentPlayer))
+END
+
+TO checkWinner
+	if (or (checkRow 1 2 3)
+		   (checkRow 4 5 6)
+		   (checkRow 7 8 9)
+		   (checkRow 1 4 7)
+		   (checkRow 2 5 8)
+		   (checkRow 3 6 9)
+		   (checkRow 1 5 9)
+		   (checkRow 3 5 7)) [ 
+		print `[,currentPlayer Wins!]
+		bye
+	]
+END
+
+TO checkDraw
+	FOR [i 1 9 1] [
+		IF (number? (item i cells)) [	
+			STOP
+		]
+	]
+	print [It's a Draw!]
+	bye
+END
 		
 TO promptMove 
-	type `[Which square, ,currentPlayer] 
+	type `[Select a square, ,currentPlayer] 
 	type `[,": ," ]
-	make "numpos readword
-	show numpos
-	markPos currentPlayer numpos
-	swapPlayer
+	localmake "numpos readword
+	if (number? numpos) [
+		if (and (numpos > 0) (numpos < 10) (number? (item numpos cells))) [
+			markPos currentPlayer numpos
+			checkWinner
+			checkDraw
+			swapPlayer
+		]
+	]
 END
 
 penup
