@@ -1,0 +1,98 @@
+
+
+class TicTacToe
+	"""
+	Tic Tac Toe in Cobra
+	"""
+	def main
+		players = Ring<of String>("X", "O")
+
+
+class Ring<of T>
+	"""
+	A Ring class that takes its inputs and will return one 
+	after the other ad infinitum.
+	"""
+	var _enumerator
+
+	test
+		ring = Ring<of int>(1, 2, 3)
+		assert ring.next == 1
+		assert ring.next == 2
+		assert ring.next == 3
+		assert ring.next == 1
+
+	cue init(items as vari T)
+		base.init
+		_enumerator = List<of T>(items).getEnumerator
+
+	def next as T
+		if _enumerator.moveNext
+			return _enumerator.current
+		else
+			_enumerator.reset
+			return .next
+
+class Cell
+	"""
+	A mesh-aware cell on the tic-tac-toe board.  It keeps track
+	of its neighbors and can detect winners that way.
+	"""
+	pro address from var as int
+	pro value from var as String?
+
+	# Neighbors
+	var _east	as Cell?
+	var _se		as Cell?
+	var _south	as Cell?
+	var _sw		as Cell?
+	var _west	as Cell?
+	var _nw		as Cell?
+	var _north	as Cell?
+	var _ne		as Cell?
+
+	cue init(address as int)
+		base.init
+		.address = address
+
+	def addEast(cell as Cell) as Cell?
+		_east = cell
+		return _north
+
+	def addSouthEast(cell as Cell) as Cell?
+		_se = cell
+		return _east
+
+	def addSouth(cell as Cell) as Cell?
+		_south = cell
+		return _east
+
+	def addSouthWest(cell as Cell)
+		_sw = cell
+
+	def matchEast(cell as Cell) as int
+		if .value <> cell.value
+			return 0
+		else if _east
+			return 1 + _east.matchEast(this)
+		else
+			return 1
+
+class Board
+
+	pro dim from var as int
+	var _cells as Cell[]
+
+	cue init(dim as int)
+		ensure
+			dim >= 3
+		body
+			base.init
+			.dim = dim
+			_cells = Cell[](dim * dim)
+			for i in dim * dim, _cells[i] = Cell(i+1)
+		
+
+
+
+
