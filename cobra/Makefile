@@ -2,12 +2,12 @@
 .PHONY: clean test stats
 
 ttt:	TicTacToe.cobra
-	cobra -test -target:exe -out:ttt TicTacToe.cobra
+	cobra -c -target:exe TicTacToe.cobra
 
 clean: 
-	rm -f ttt
+	rm -f *.cs *.mdb *.exe
 
-test:	ttt
+test:	TicTacToe.exe
 	ruby ../verify/ttt_test.rb
 
 stats:

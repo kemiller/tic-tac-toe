@@ -1,11 +1,44 @@
 
-
 class TicTacToe
 	"""
 	Tic Tac Toe in Cobra
 	"""
-	def main
+	def main is shared
 		players = Ring<of String>("X", "O")
+		board = Board(3)
+
+		player = players.next
+		cellsRemaining = 9
+
+		while true
+			print board
+			
+			Console.write('Select a square, [player]: ')
+			Console.out.flush
+			try 
+				answer = Console.readLine
+				Console.out.flush
+			catch System.ArgumentNullException 
+				break
+
+			cell = board.getCell(answer)
+			if not cell
+				continue
+
+			cellsRemaining -= 1
+
+			cell.value = player
+			if cell.matchAny(3)
+				print board
+				print "[player] Wins!"
+				break
+
+			if cellsRemaining <= 0
+				print board
+				print "It's a Draw!"
+				break
+
+			player = players.next
 
 
 class Ring<of T>
@@ -13,7 +46,7 @@ class Ring<of T>
 	A Ring class that takes its inputs and will return one 
 	after the other ad infinitum.
 	"""
-	var _enumerator
+	var _enumerator as IEnumerator<of T>
 
 	test
 		ring = Ring<of int>(1, 2, 3)
@@ -38,59 +71,176 @@ class Cell
 	A mesh-aware cell on the tic-tac-toe board.  It keeps track
 	of its neighbors and can detect winners that way.
 	"""
-	pro address from var as int
+	pro address from var as String
 	pro value from var as String?
 
-	# Neighbors
-	var _east	as Cell?
-	var _se		as Cell?
-	var _south	as Cell?
-	var _sw		as Cell?
-	var _west	as Cell?
-	var _nw		as Cell?
-	var _north	as Cell?
-	var _ne		as Cell?
+	enum Dir
+		East
+		Southeast
+		South
+		Southwest
+		West
+		Northwest
+		North
+		Northeast
 
-	cue init(address as int)
+	# Neighbors
+	var _neighbors = Dictionary<of Dir, Cell?>() 
+
+	cue init(address as String)
 		base.init
 		.address = address
+		for i in 8
+			_neighbors[i to Dir] = nil
 
-	def addEast(cell as Cell) as Cell?
-		_east = cell
-		return _north
+	cue init(address as String, value as String)
+		.init(address)
+		.value = value
 
-	def addSouthEast(cell as Cell) as Cell?
-		_se = cell
-		return _east
+	def opposite(dir as Dir) as Dir
+		test
+			cell = Cell('2')
+			assert cell.opposite(Dir.East) == Dir.West
+			assert cell.opposite(Dir.West) == Dir.East
+			assert cell.opposite(Dir.Northeast) == Dir.Southwest
+		body
+			val = dir to int
+			val = (val + 4) % 8
+			return val to Dir
 
-	def addSouth(cell as Cell) as Cell?
-		_south = cell
-		return _east
+	def add(dir as Dir, cell as Cell?)
+		if not _neighbors[dir]
+			_neighbors[dir] = cell
+			if cell, cell.add(.opposite(dir), this)
 
-	def addSouthWest(cell as Cell)
-		_sw = cell
+	def addOtherSide(cell as Cell)
+		.add(Dir.East, cell)
+		cell.add(Dir.Northwest, _neighbors[Dir.North])
+		cell.addBelow(_neighbors[Dir.Northeast])
 
-	def matchEast(cell as Cell) as int
+	def addAbove(cell as Cell)
+		.add(Dir.South, cell)
+		cell.add(Dir.Northeast, _neighbors[Dir.East])
+
+	def addBelow(cell as Cell?) as Cell
+		if cell, cell.addAbove(this)
+		return this
+
+	def addBeside(cell as Cell?) as Cell
+		if cell, cell.addOtherSide(this)
+		return this
+
+	def match(direction as Dir, cell as Cell) as int
 		if .value <> cell.value
 			return 0
-		else if _east
-			return 1 + _east.matchEast(this)
+		else if _neighbors[direction]
+			return 1 + _neighbors[direction].match(direction, this)
 		else
 			return 1
+
+	def match(dir as Dir, target as int) as bool
+		test
+			cell1 = Cell('1', "X")
+			cell2 = Cell('2', "X").addBeside(cell1)
+			cell3 = Cell('3', "X").addBeside(cell2)
+			cell4 = Cell('4', "X").addBelow(cell1)
+			cell5 = Cell('5', "X").addBeside(cell4)
+			cell6 = Cell('6', "X").addBeside(cell5)
+			cell7 = Cell('7', "X").addBelow(cell4)
+			cell8 = Cell('8', "X").addBeside(cell7)
+			cell9 = Cell('9', "X").addBeside(cell8)
+
+			assert cell1.match(Dir.Southeast, 3)
+			assert cell7.match(Dir.Southwest, 3)
+			assert cell7.match(Dir.Northeast, 3)
+			assert cell3.match(Dir.North, 3)
+			assert not cell6.match(Dir.Northeast, 3)
+			assert cell9.match(Dir.West, 3)
+
+		body
+			opp = .opposite(dir)
+			num = 1
+			if _neighbors[dir], num += _neighbors[dir].match(dir, this)
+			if _neighbors[opp], num += _neighbors[opp].match(opp, this)
+			return target == num
+
+
+	def matchAny(target as int) as bool
+		return  .match(Dir.East, target) or _
+				.match(Dir.North, target) or _
+				.match(Dir.Northeast, target) or _
+				.match(Dir.Northwest, target)
+
+	
+	def toString as String is override
+		if .value
+			return ' [.value] '
+		else
+			return '([.address])'
+
+	def rowToString(sb as StringBuilder, sep as String)
+		sb.append(this)
+		if _neighbors[Dir.East]
+			sb.append(sep)
+			_neighbors[Dir.East].rowToString(sb, sep)
+
+	
+	def allToString(sb as StringBuilder, colsep as String, rowsep as String)
+		.rowToString(sb, colsep)
+		if _neighbors[Dir.South]
+			sb.append(Environment.newLine)
+			sb.append(rowsep)
+			sb.append(Environment.newLine)
+			_neighbors[Dir.South].allToString(sb, colsep, rowsep)
+
 
 class Board
 
 	pro dim from var as int
-	var _cells as Cell[]
+	pro head from var as Cell?
+	var _cells as IList<of Cell?>
+	var _rowsep as String
 
 	cue init(dim as int)
 		ensure
 			dim >= 3
 		body
 			base.init
-			.dim = dim
-			_cells = Cell[](dim * dim)
-			for i in dim * dim, _cells[i] = Cell(i+1)
+			_dim = dim
+			_cells = List<of Cell?>()
+			_constructBoard
+			_rowsep = "---"
+			for i in 1 : dim
+				_rowsep += "+---"
+
+	def _constructBoard
+		head = nil
+		tail = nil
+		for i in .dim
+			for j in .dim
+				cell = Cell((i*.dim + j + 1).toString)
+				_cells.add(cell)
+				if j == 0
+					head = tail = cell.addBelow(head)
+				else
+					tail = cell.addBeside(tail)
+		.head = _cells[0]
+
+	def getCell(address as String?) as Cell?
+		if not address, return nil
+		for cell in _cells
+			if cell.address == address
+				_cells.remove(cell)
+				return cell
+		return nil
+
+	def toString as String is override
+		sb = StringBuilder()
+		sb.append(Environment.newLine)
+		.head.allToString(sb, "|",_rowsep)
+		sb.append(Environment.newLine)
+		return sb.toString
+
 		
 
 
