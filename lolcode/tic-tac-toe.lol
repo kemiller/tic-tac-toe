@@ -1,8 +1,31 @@
 HAI
+
+  OBTW
+    join
+    Basic array join.
+  TLDR	
+  HOW DUZ I join YR a AN YR b
+    I HAS A count ITZ ALL a
+    LOL count R count NERF 1
+
+    IZ count SMALR DEN 0 ? FOUND YR ""
+
+    I HAS A output ITZ ""
+    IM IN YR LOOP
+      LOL output R count IN MAH a N output
+
+      IZ count BIGR DEN 0 ? LOL output R b N output
+      IZ count LIEK 0 ? GTFO
+
+      LOL count R count NERF 1
+    KTHX
+
+    FOUND YR output
+  IF U SAY SO
+
   OBTW
     cell formatting
   TLDR
-
   HOW DUZ I formatz YR cell
     IZ cell SORTA "\d" ? FOUND YR "(" N cell N ")"
     FOUND YR " " N cell N " "
@@ -55,6 +78,31 @@ HAI
     LOL indeks IN MAH bord R playr
     FOUND YR 1
   IF U SAY SO
+
+  HOW DUZ I canHasWinnarIn YR bord AN YR playr
+    I HAS A bordMadeOfYarn ITZ join YR bord AN YR "" MKAY
+    
+    BTW rows
+    IZ bordMadeOfYarn SORTA "(" N playr N ")(" N playr N ")(" N playr N ")......" ? FOUND YR 1
+    IZ bordMadeOfYarn SORTA "...(" N playr N ")(" N playr N ")(" N playr N ")..." ? FOUND YR 1
+    IZ bordMadeOfYarn SORTA "......(" N playr N ")(" N playr N ")(" N playr N ")" ? FOUND YR 1
+
+    BTW columns
+    IZ bordMadeOfYarn SORTA "(" N playr N ")..(" N playr N ")..(" N playr N ").." ? FOUND YR 1
+    IZ bordMadeOfYarn SORTA ".(" N playr N ")..(" N playr N ")..(" N playr N ")." ? FOUND YR 1
+    IZ bordMadeOfYarn SORTA "..(" N playr N ")..(" N playr N ")..(" N playr N ")" ? FOUND YR 1
+
+    BTW diagonals
+    IZ bordMadeOfYarn SORTA "(" N playr N ")...(" N playr N ")...(" N playr N ")" ? FOUND YR 1
+    IZ bordMadeOfYarn SORTA "..(" N playr N ").(" N playr N ").(" N playr N ").." ? FOUND YR 1
+
+    FOUND YR 0
+  IF U SAY SO
+
+  HOW DUZ I canHasTieIn YR fantsyBord
+    IZ fantsyBord SORTA "\d" ? FOUND YR 0 
+    FOUND YR 1
+  IF U SAY SO
     
   I HAS A bord
   I HAS A bord_lemf ITZ 9
@@ -66,24 +114,46 @@ HAI
     LOL current_lemf IN MAH bord R current_lemf UP 1
   KTHX
 
-  OBTW
-    You have to assign to nothing in order 
-    to call a function that doesn't return 
-    anything
-  TLDR
+  I HAS A playr ITZ "X"
+  I HAS A moovWerked ITZ 0
 
-  I HAS A fantzyBord ITZ printz YR bord MKAY
-  VISIBLE fantzyBord
+  IM IN YR gaimLoop
+    I HAS A fantsyBord ITZ printz YR bord MKAY
+    VISIBLE fantsyBord
 
-  I HAS A move
+    I HAS A winnar ITZ canHasWinnarIn YR bord AN YR playr MKAY
+    IZ winnar LIEK 1 O RLY?
+      YA RLY
+        BTW VISIBLE playr N " IS TEH WINNAR!1!!!"
+        VISIBLE playr N " Wins!"
+        GTFO
+    KTHX
 
-  VISIBLE "Select a square, X: "!
-  GIMMEH NUMBR move
+    I HAS A tie ITZ canHasTieIn YR fantsyBord MKAY
+    IZ tie LIEK 1 O RLY?
+      YA RLY
+        BTW VISIBLE "NO MOAR WINNARZ!!!?/1!"
+        VISIBLE "It's a Draw!"
+        GTFO
+    KTHX
 
-  I HAS A moveWerked ITZ makezYrMove YR "X" AN YR move AN YR bord MKAY
+    IZ moovWerked LIEK 1 O RLY?
+      YA RLY
+        IZ playr LIEK "X" O RLY?
+          YA RLY
+            LOL playr R "O"
+          NO WAI
+            LOL playr R "X"
+        KTHX
+    KTHX
 
-  LOL fantzyBord R printz YR bord MKAY
-  VISIBLE fantzyBord
+    I HAS A moov
+    BTW VISIBLE "Makes yr moov, " N playr N ": "!
+    VISIBLE "Select a square, " N playr N ": "!
+    GIMMEH NUMBR moov
+
+    LOL moovWerked R makezYrMove YR playr AN YR moov AN YR bord MKAY
+  KTHX
 
 KTHXBYE
 
