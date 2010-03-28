@@ -85,21 +85,21 @@ HAI
   IF U SAY SO
 
   HOW DUZ I canHasWinnarIn YR bord AN YR playr
-    I HAS A bordMadeOfYarn ITZ join YR bord AN YR "" MKAY
+    I HAS A bordMaidUvYarn ITZ join YR bord AN YR "" MKAY
     
     BTW rows
-    IZ bordMadeOfYarn SORTA "(" N playr N ")(" N playr N ")(" N playr N ")......" ? FOUND YR 1
-    IZ bordMadeOfYarn SORTA "...(" N playr N ")(" N playr N ")(" N playr N ")..." ? FOUND YR 1
-    IZ bordMadeOfYarn SORTA "......(" N playr N ")(" N playr N ")(" N playr N ")" ? FOUND YR 1
+    IZ bordMaidUvYarn SORTA "(" N playr N ")(" N playr N ")(" N playr N ")......" ? FOUND YR 1
+    IZ bordMaidUvYarn SORTA "...(" N playr N ")(" N playr N ")(" N playr N ")..." ? FOUND YR 1
+    IZ bordMaidUvYarn SORTA "......(" N playr N ")(" N playr N ")(" N playr N ")" ? FOUND YR 1
 
     BTW columns
-    IZ bordMadeOfYarn SORTA "(" N playr N ")..(" N playr N ")..(" N playr N ").." ? FOUND YR 1
-    IZ bordMadeOfYarn SORTA ".(" N playr N ")..(" N playr N ")..(" N playr N ")." ? FOUND YR 1
-    IZ bordMadeOfYarn SORTA "..(" N playr N ")..(" N playr N ")..(" N playr N ")" ? FOUND YR 1
+    IZ bordMaidUvYarn SORTA "(" N playr N ")..(" N playr N ")..(" N playr N ").." ? FOUND YR 1
+    IZ bordMaidUvYarn SORTA ".(" N playr N ")..(" N playr N ")..(" N playr N ")." ? FOUND YR 1
+    IZ bordMaidUvYarn SORTA "..(" N playr N ")..(" N playr N ")..(" N playr N ")" ? FOUND YR 1
 
     BTW diagonals
-    IZ bordMadeOfYarn SORTA "(" N playr N ")...(" N playr N ")...(" N playr N ")" ? FOUND YR 1
-    IZ bordMadeOfYarn SORTA "..(" N playr N ").(" N playr N ").(" N playr N ").." ? FOUND YR 1
+    IZ bordMaidUvYarn SORTA "(" N playr N ")...(" N playr N ")...(" N playr N ")" ? FOUND YR 1
+    IZ bordMaidUvYarn SORTA "..(" N playr N ").(" N playr N ").(" N playr N ").." ? FOUND YR 1
 
     FOUND YR 0
   IF U SAY SO
