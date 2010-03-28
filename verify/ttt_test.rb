@@ -94,7 +94,7 @@ class TttTest < Test::Unit::TestCase
       write.sync = true
 
       inputs.each do |input|
-        read.expect(/.*[:!]\s/, 1) do |response|
+        read.expect(/.*[:!]\s/, 5) do |response|
           return nil unless response
           last_response = response
           penultimate_input = last_input

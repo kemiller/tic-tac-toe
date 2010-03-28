@@ -75,8 +75,13 @@ HAI
 
     I HAS A indeks ITZ space NERF 1
 
-    LOL indeks IN MAH bord R playr
-    FOUND YR 1
+    IZ indeks IN MAH bord SORTA "\d" O RLY?
+      YA RLY
+        LOL indeks IN MAH bord R playr
+        FOUND YR 1
+      NO WAI
+        FOUND YR 0
+    KTHX
   IF U SAY SO
 
   HOW DUZ I canHasWinnarIn YR bord AN YR playr
