@@ -129,16 +129,18 @@ HAI
     I HAS A winnar ITZ canHasWinnarIn YR bord AN YR playr MKAY
     IZ winnar LIEK 1 O RLY?
       YA RLY
-        BTW VISIBLE playr N " IS TEH WINNAR!1!!!"
-        VISIBLE playr N " Wins!"
+        VISIBLE playr N " IS TEH WINNAR!1!!!"
+        BTW Use this line instead if you want to run tests
+        BTW VISIBLE playr N " Wins!"
         GTFO
     KTHX
 
     I HAS A tie ITZ canHasTieIn YR fantsyBord MKAY
     IZ tie LIEK 1 O RLY?
       YA RLY
-        BTW VISIBLE "NO MOAR WINNARZ!!!?/1!"
-        VISIBLE "It's a Draw!"
+        VISIBLE "NO MOAR WINNARZ!!!?/1!"
+        BTW Use this line instead if you want to run tests
+        BTW VISIBLE "It's a Draw!"
         GTFO
     KTHX
 
@@ -153,8 +155,11 @@ HAI
     KTHX
 
     I HAS A moov
-    BTW VISIBLE "Makes yr moov, " N playr N ": "!
-    VISIBLE "Select a square, " N playr N ": "!
+
+    VISIBLE "Makez yr moov, " N playr N ": "!
+    BTW Use this line instead if you want to run tests
+    BTW VISIBLE "Select a square, " N playr N ": "!
+
     GIMMEH NUMBR moov
 
     LOL moovWerked R makezYrMove YR playr AN YR moov AN YR bord MKAY
