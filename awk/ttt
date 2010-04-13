@@ -1,26 +1,18 @@
-#!/usr/bin/env gawk -f
+#!/usr/bin/env awk -f
 
 BEGIN {
-
 	split("1 2 3 4 5 6 7 8 9", spaces)
 	player = "X"
 
 	print_board()
-
-	good_move = 0
-
-	while (keep_playing()) {
-		if (good_move) swap_player()
-		print_prompt()
-		read_move()
-		good_move = place_move()
-		print_board()
-	}
-
+	print_prompt()
 }
 
+/[0-9]/ { place_move($1) }
+/./ { print_board(); print_prompt() }
+
 function print_board () {
-	print
+	print ""
 	for (i = 1; i <= 9; i++) {
 		space = spaces[i]
 		if (space ~ /[0-9]/)
@@ -48,10 +40,17 @@ function read_move () {
 	getline move
 }
 
-function place_move () {
-	ret = (move && spaces[move] == move)
-	if (ret) spaces[move] = player
-	return ret
+function place_move (move) {
+	if (move && spaces[move] == move) {
+		spaces[move] = player
+		good_move = 0
+
+		if (keep_playing()) {
+			swap_player()
+		} else {
+			exit 0
+		}
+	}
 }
 
 function swap_player () {
@@ -87,9 +86,11 @@ function is_draw () {
 
 function keep_playing() {
 	if (has_winner()) {
+		print_board()
 		printf("%s Wins!\n", player)
 		return 0;
 	} else if (is_draw()) {
+		print_board()
 		print("It's a Draw!")
 		return 0;
 	} else
