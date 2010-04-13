@@ -1,0 +1,98 @@
+#!/usr/bin/env gawk -f
+
+BEGIN {
+
+	split("1 2 3 4 5 6 7 8 9", spaces)
+	player = "X"
+
+	print_board()
+
+	good_move = 0
+
+	while (keep_playing()) {
+		if (good_move) swap_player()
+		print_prompt()
+		read_move()
+		good_move = place_move()
+		print_board()
+	}
+
+}
+
+function print_board () {
+	print
+	for (i = 1; i <= 9; i++) {
+		space = spaces[i]
+		if (space ~ /[0-9]/)
+			printf("(%d)", space);
+		else
+			printf(" %s ", space);
+
+		if (i % 3 == 0) {
+			if (i / 3 < 3) {
+				printf "\n---+---+---\n";
+			}
+		} else {
+			printf "|";
+		}
+	}
+
+	print "\n"
+}
+
+function print_prompt () {
+	printf "Select a square, %s: ", player
+}
+
+function read_move () {
+	getline move
+}
+
+function place_move () {
+	ret = (move && spaces[move] == move)
+	if (ret) spaces[move] = player
+	return ret
+}
+
+function swap_player () {
+	if (player == "X")
+		player = "O"
+	else
+		player = "X"
+}
+
+function m3(i, j, k) {
+	return spaces[i] == spaces[j] && spaces[j] == spaces[k]
+}
+
+function has_winner () {
+	return m3(1,2,3) || 
+		   m3(4,5,6) ||
+		   m3(7,8,9) ||
+		   m3(1,4,7) ||
+		   m3(2,5,8) ||
+		   m3(3,6,9) ||
+		   m3(1,5,9) ||
+		   m3(3,5,7);
+}
+
+function is_draw () {
+	for (i = 1; i <= 9; i++) {
+		space = spaces[i]
+		if (space ~ /[0-9]/) 
+			return 0;
+	}
+	return 1
+}
+
+function keep_playing() {
+	if (has_winner()) {
+		printf("%s Wins!\n", player)
+		return 0;
+	} else if (is_draw()) {
+		print("It's a Draw!")
+		return 0;
+	} else
+		return 1;
+}
+
