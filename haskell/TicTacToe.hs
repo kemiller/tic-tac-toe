@@ -51,17 +51,14 @@ instance Show Result where
 -- 
 -- Initial Board
 --
-startingBoard :: Board
-startingBoard = Board [[Empty 1,Empty 2,Empty 3],
-                       [Empty 4,Empty 5,Empty 6],
-                       [Empty 7,Empty 8,Empty 9]]
+startingBoard = Board [[Empty 1, Empty 2, Empty 3],
+                       [Empty 4, Empty 5, Empty 6],
+                       [Empty 7, Empty 8, Empty 9]]
 
-matchSquare :: User -> Int -> Square -> Square
 matchSquare user position (Empty x) | x == position = Move user
 matchSquare _ _ square                              = square
 
 -- This evaluates the board and determines the result of the current user's action
-outcome :: User -> Board -> Result
 outcome user board =
       case board of
            (Board [[a, _, _],
@@ -102,7 +99,6 @@ outcome user board =
 		eq a b c = a == b && b == c
 			 
 
-move :: User -> Int -> Board -> Result
 move user pos board = result user pos board (place user pos board)
     where
         place user pos (Board lines) = Board $ map (placeInLine user pos) lines
@@ -113,7 +109,6 @@ move user pos board = result user pos board (place user pos board)
             | orig == board          = Continue user orig
             | otherwise              = outcome user board
 
-main :: IO ()
 main = loop (Continue X startingBoard)
     where 
         loop result = do 
