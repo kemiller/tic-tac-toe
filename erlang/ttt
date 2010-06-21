@@ -1,0 +1,2 @@
+#!/bin/sh
+erl -noshell -s tic_tac_toe main
