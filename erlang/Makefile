@@ -1,7 +1,9 @@
 
 .PHONY: clean test stats ttt
 
-ttt:	tic_tac_toe.erl
+ttt:	tic_tac_toe.beam
+
+tic_tac_toe.beam: tic_tac_toe.erl
 	erlc tic_tac_toe.erl
 
 clean: 

@@ -17,37 +17,14 @@ place(Space, GameState) ->
 	place([], Space, GameState).
 
 %% Result-Checking
-result([P, P, P, 
-		_, _, _, 
-		_, _, _]) -> win;
-
-result([_, _, _, 
-		P, P, P, 
-		_, _, _]) -> win;
-
-result([_, _, _, 
-		_, _, _, 
-		P, P, P]) -> win;
-
-result([P, _, _, 
-		P, _, _, 
-		P, _, _]) -> win;
-
-result([_, P, _, 
-		_, P, _, 
-		_, P, _]) -> win;
-
-result([_, _, P, 
-		_, _, P, 
-		_, _, P]) -> win;
-
-result([P, _, _, 
-		_, P, _, 
-		_, _, P]) -> win;
-
-result([_, _, P, 
-		_, P, _, 
-		P, _, _]) -> win;
+result([P, P, P, _, _, _, _, _, _]) -> win; 
+result([_, _, _, P, P, P, _, _, _]) -> win; 
+result([_, _, _, _, _, _, P, P, P]) -> win; 
+result([P, _, _, P, _, _, P, _, _]) -> win; 
+result([_, P, _, _, P, _, _, P, _]) -> win; 
+result([_, _, P, _, _, P, _, _, P]) -> win; 
+result([P, _, _, _, P, _, _, _, P]) -> win; 
+result([_, _, P, _, P, _, P, _, _]) -> win;
 
 result([H|_]) when is_integer(H) -> continue;
 result([_|T])                    -> result(T);
@@ -63,22 +40,18 @@ print(Xs) 	            -> io:format(fmt(), [cell_repr(X) || X <- Xs]).
 
 check_status({continue, CurP, Board, NextP}) ->
 	Prompt = io_lib:format("Select a square, ~s: ", [CurP]),
-	Input = io:get_line(Prompt),
-	{Space, _} = string:to_integer(Input),
+	{Space, _} = string:to_integer(io:get_line(Prompt)),
 	place(Space, {continue, CurP, Board, NextP});
 
 check_status({tie, _, _, _}) ->
 	io:format("It's a Draw!\n"),
-	quit;
+	init:stop();
 
 check_status({win, _, _, Winner}) ->
 	io:format("~s Wins!\n", [Winner]),
-	quit.
+	init:stop().
 
 %% Game Loop
-
-play(quit) -> init:stop();
-
 play(GameState) ->
 	{_, _, Board, _} = GameState,
 	print(Board),
