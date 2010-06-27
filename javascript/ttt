@@ -1,0 +1,3 @@
+#!/bin/bash
+
+jsc tic-tac-toe.js

@@ -92,7 +92,7 @@ while (true) {
 		print("It's a Draw!");
 		break;
 	} else {
-		print("Select a square, " + player.plain + ":");
+		print("Select a square, " + player.plain + ": ");
 		space = parseInt(readline());
 		if (board.place(space, player)) {
 			player = player.other;
