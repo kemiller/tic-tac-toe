@@ -3,7 +3,7 @@ import Data.List (intersperse)
 import System.IO (stdout, hFlush)
 import System.Exit (exitSuccess)
 
--- 
+--
 -- Users
 --
 data User = X | O
@@ -12,7 +12,7 @@ data User = X | O
 otherUser X = O
 otherUser O = X
 
--- 
+--
 -- Squares
 --
 data Square = Move User | Empty Int
@@ -25,7 +25,7 @@ instance Show Square where
 filled (Move _) = True
 filled _        = False
 
--- 
+--
 -- Boards
 --
 data Board = Board [[Square]]
@@ -38,7 +38,7 @@ instance Show Board where
 
 full (Board squares) = all filled (concat squares)
 
--- 
+--
 -- Results
 --
 data Result = Continue User Board | Win User Board | Draw Board
@@ -48,7 +48,7 @@ instance Show Result where
     show (Win user board)      = show board ++ show user ++ " Wins!\n"
     show (Draw board)          = show board ++ "It's a Draw!\n"
 
--- 
+--
 -- Initial Board
 --
 startingBoard = Board [[Empty 1, Empty 2, Empty 3],
@@ -62,42 +62,42 @@ matchSquare _ _ square                              = square
 outcome user board =
       case board of
            (Board [[a, _, _],
-		           [_, b, _],
-				   [_, _, c]]) | eq a b c -> Win user board
+	           [_, b, _],
+		   [_, _, c]]) | eq a b c -> Win user board
 
            (Board [[_, _, a],
-				   [_, b, _],
-				   [c, _, _]]) | eq a b c -> Win user board
+		   [_, b, _],
+		   [c, _, _]]) | eq a b c -> Win user board
 
            (Board [[a, b, c],
-				   [_, _, _],
-				   [_, _, _]]) | eq a b c -> Win user board
+		   [_, _, _],
+		   [_, _, _]]) | eq a b c -> Win user board
 
            (Board [[_, _, _],
-				   [a, b, c],
-				   [_, _, _]]) | eq a b c -> Win user board
+		   [a, b, c],
+		   [_, _, _]]) | eq a b c -> Win user board
 
            (Board [[_, _, _],
-				   [_, _, _],
-				   [a, b, c]]) | eq a b c -> Win user board
+		   [_, _, _],
+		   [a, b, c]]) | eq a b c -> Win user board
 
            (Board [[a, _, _],
-				   [b, _, _],
-				   [c, _, _]]) | eq a b c -> Win user board
+		   [b, _, _],
+		   [c, _, _]]) | eq a b c -> Win user board
 
            (Board [[_, a, _],
-				   [_, b, _],
-				   [_, c, _]]) | eq a b c -> Win user board
+		   [_, b, _],
+		   [_, c, _]]) | eq a b c -> Win user board
 
            (Board [[_, _, a],
-				   [_, _, b],
-				   [_, _, c]]) | eq a b c -> Win user board
+		   [_, _, b],
+		   [_, _, c]]) | eq a b c -> Win user board
 
            _ | full board -> Draw board
              | otherwise  -> Continue (otherUser user) board
 	where
 		eq a b c = a == b && b == c
-			 
+
 
 move user pos board = result user pos board (place user pos board)
     where
@@ -105,13 +105,13 @@ move user pos board = result user pos board (place user pos board)
 
         placeInLine user pos         = map $ matchSquare user pos
 
-        result user pos orig board 
+        result user pos orig board
             | orig == board          = Continue user orig
             | otherwise              = outcome user board
 
 main = loop (Continue X startingBoard)
-    where 
-        loop result = do 
+    where
+        loop result = do
             putStr $ show result
             hFlush stdout
             case result of
@@ -119,7 +119,7 @@ main = loop (Continue X startingBoard)
                  Draw board          -> exitSuccess
                  Continue user board -> getInput user board
         getInput user board = do
-             pos <- readLn::IO Int 
+             pos <- readLn::IO Int
              loop (move user pos board)
 
 
